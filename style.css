@@ -14,3 +14,7 @@
     height: "27px";
     outline: "none";
 }
+
+.f-width {
+    width: 100% !important
+}

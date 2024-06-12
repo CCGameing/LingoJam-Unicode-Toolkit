@@ -7,7 +7,6 @@
 
 console.log("Repo Import Successful!")
 
-
 //#region GUI Container
 
 const guiContainer = $("<div></div>")
@@ -65,7 +64,7 @@ row1.append(extra)
 
 //#endregion
 
-//#region 
+//#region Row2
 
 var row2 = $("<div></div>")
 buttonContainer.append(row2)
@@ -78,9 +77,35 @@ emoji.text("Random Emojis")
 
 row2.append(emoji)
 
+//#endregion
 
-// Translation Functions
+//#endregion
 
+
+//#region Translation Functions
+
+//#region Translate
+
+//@Override
+function translate(text, direction) {
+
+    switch (direction) {
+
+        case "forward" :
+            $("#ghetto-text")[0].value = forward(text)
+            break;
+
+        case "backward" :
+            $("#english-text")[0].value = backward(text)
+            break;
+
+        default :
+            console.error(direction + " is not a valid translation direction")
+            break;
+
+    }
+
+}
 
 function forward(input) {
 
@@ -94,11 +119,9 @@ for (var i = 0; i < list.length; i++) {
 
 }
 
-return list.join('');
+return list.join("");
 
 }
-
-
 
 function backward(input) {
 
@@ -133,96 +156,102 @@ return list.join(" ");
 
 }
 
+//#endregion
 
-// Toolkit Functions
+//#region Functions
 
 alert("Shortcuts: \n    'Shift + 1' - Random Characters \n    'Shift + 2' - Extra Characters \n    'Shift + 3' - Random Emojis \n    '/' - Search 16 bit character \n    'Shift + /' - Search 32 bit character \n    'Shift + `' - Copy to clipboard")
 
+var funcActive = false;
+
 window.onkeydown = function(e) { 
 
-    switch (e.key) {
+    console.log(e)
 
-        case '!':
+    if (e.code == 'AltLeft') { funcActive = true; }
 
-        e.preventDefault()
+    if (funcActive) {
 
-        newRandom('simple')
+        e.preventDefault();
 
-        break
+        switch (e.key) {
 
+            case '!':
 
-        case '@':
+            newRandom('simple')
 
-        e.preventDefault()
-
-        newRandom()
-
-        break
+            break
 
 
-        case '#':
+            case '@':
 
-        e.preventDefault()
+            newRandom()
 
-        newRandom('emoji')
-
-        break
+            break
 
 
-        case '$':
+            case '#':
 
-        e.preventDefault()
+            newRandom('emoji')
 
-        randomText()
-
-        break
+            break
 
 
-        case '/':
+            case '$':
 
-        e.preventDefault()
+            randomText()
 
-        var selection = window.getSelection().toString()
-        var value = selection.charCodeAt(0)
-        var str = value.toString(16)
+            break
 
-        while (str.length < 4) {
-            str = '0' + str
+
+            case '/':
+
+            var selection = window.getSelection().toString()
+            var value = selection.charCodeAt(0)
+            var str = value.toString(16)
+
+            while (str.length < 4) {
+                str = '0' + str
+            }
+
+            window.open('https://www.compart.com/en/unicode/U+' + str)
+
+            break
+
+
+            case '?':
+
+            var selection = window.getSelection().toString()
+            var half1 = selection[0]
+            var half2 = selection[1]
+            var value = (half1 + half2).codePointAt(0)
+            var str = value.toString(16)
+
+            while (str.length < 4) {
+                str = '0' + str
+            }
+
+            window.open('https://www.compart.com/en/unicode/U+' + str)
+
+            break
+
+
+            case '~':
+
+            navigator.clipboard.writeText(document.querySelector("#ghetto-text").value)
+
+            break
+
+
         }
-
-        window.open('https://www.compart.com/en/unicode/U+' + str)
-
-        break
-
-
-        case '?':
-
-        e.preventDefault()
-
-        var selection = window.getSelection().toString()
-        var half1 = selection[0]
-        var half2 = selection[1]
-        var value = (half1 + half2).codePointAt(0)
-        var str = value.toString(16)
-
-        while (str.length < 4) {
-            str = '0' + str
-        }
-
-        window.open('https://www.compart.com/en/unicode/U+' + str)
-
-        break
-
-
-        case '~':
-
-        e.preventDefault()
-        navigator.clipboard.writeText(document.querySelector("#ghetto-text").value)
-
-        break
-
 
     }
+
+}
+
+window.onkeyup = function(e) {
+    
+    if (e.code == 'AltLeft') { funcActive = false; }
 
 }
 
@@ -301,7 +330,6 @@ function newRandom(extra) {
 
 // Regular Expression Filter
 
-
 function regexCheck(value, regex) {
 
     let character = String.fromCodePoint(value)
@@ -316,3 +344,4 @@ function regexCheck(value, regex) {
 
 }
 
+//#endregion
